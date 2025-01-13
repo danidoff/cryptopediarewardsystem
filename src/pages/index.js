@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Web3 from "web3";
-import { rewardContractAbi, rewardContractAddress } from "./constants";
+import { rewardContractAbi, rewardContractAddress } from "../helpers/constants";
 
 const HomePage = () => {
   const [web3, setWeb3] = useState(null);
