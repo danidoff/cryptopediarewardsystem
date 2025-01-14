@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Web3 from "web3";
-import { rewardContractAbi, rewardContractAddress } from "../helpers/constants";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+import Web3 from "web3";
+import { rewardContractAbi, rewardContractAddress } from "../helpers/constants";
 
 const HomePage = () => {
   const [web3, setWeb3] = useState(null);
@@ -74,6 +74,25 @@ const HomePage = () => {
     setContract(null);
     toast.info("Wallet disconnected.");
   };
+
+  const handleDistribute = async () => {
+    try {
+      console.log("Distribute rewards triggered.");
+      const confirmDistribute = window.confirm(
+          "Are you sure you want to distribute rewards to all eligible addresses?"
+      );
+      if (!confirmDistribute) {
+        setLoading(false);
+        return;
+      }
+      console.log("Attempting to distribute rewards...");
+      await contract.methods.distributeRewards().send({ from: account });
+      toast.success("Rewards distributed successfully.");
+    } catch (error) {
+      console.error("Error distributing rewards:", error);
+      toast.error("Failed to distribute rewards. Check the console for details.");
+    }
+  }
 
   const handleAction = async () => {
     if (!contract) return toast.error("Contract is not loaded.");
@@ -240,7 +259,7 @@ const HomePage = () => {
                   </button>
 
                   <button
-                      onClick={() => setAction("distribute")}
+                      onClick={handleDistribute}
                       style={{
                         margin: "10px 5px",
                         padding: "10px",
